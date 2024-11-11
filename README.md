@@ -10,36 +10,73 @@
   4. AES operates on a 4 × 4 column-major order array of bytes, termed the state
 
 ## PROGRAM:
-```
+### Encryption:
+```c
+
 #include <stdio.h>
 #include <string.h>
 
-void xor_encrypt_decrypt(char *input, char *key) {
-    int input_len = strlen(input);
-    int key_len = strlen(key);
-
-    for (int i = 0; i < input_len; i++) {
-        input[i] = input[i] ^ key[i % key_len]; 
+// Function to perform XOR operation for encryption
+void aesEncrypt(const char *plaintext, const char *key, char *ciphertext) {
+    for (int i = 0; i < 16; i++) {
+        ciphertext[i] = plaintext[i] ^ key[i];
     }
 }
 
 int main() {
-    char url[] = "https://www.instagram.com/";
-    char key[] = "secretkey"; 
+    char plaintext[16] = "HELLO_AES_TEST!!"; // 16-byte plaintext
+    char key[16] = "AESKEY1234567890";      // 16-byte key
+    char ciphertext[16];
 
-    printf("Original URL: %s\n", url);
+    printf("Original Text: %s\n", plaintext);
 
-    xor_encrypt_decrypt(url, key);
-    printf("Encrypted URL: %s\n", url);
+    // Encrypt the plaintext
+    aesEncrypt(plaintext, key, ciphertext);
 
-    xor_encrypt_decrypt(url, key);
-    printf("Decrypted URL: %s\n", url);
+    // Print the ciphertext in hexadecimal format
+    printf("Encrypted Text (Hex): ");
+    for (int i = 0; i < 16; i++) {
+        printf("%02X ", (unsigned char)ciphertext[i]);
+    }
+    printf("\n");
+
+    return 0;
+}
+
+```
+### Decryption:
+```c
+#include <stdio.h>
+#include <string.h>
+
+// Function to perform XOR operation for decryption
+void aesDecrypt(const char *ciphertext, const char *key, char *decryptedText) {
+    for (int i = 0; i < 16; i++) {
+        decryptedText[i] = ciphertext[i] ^ key[i];
+    }
+}
+
+int main() {
+    char key[16] = "AESKEY1234567890"; // 16-byte key
+    // Encrypted message (output from the encryption program)
+    char ciphertext[16] = {0x09, 0x00, 0x1F, 0x0C, 0x1A, 0x45, 0x08, 0x55, 
+                           0x1A, 0x1A, 0x07, 0x15, 0x00, 0x2F, 0x0C, 0x2D};
+    char decryptedText[16];
+
+    // Decrypt the ciphertext
+    aesDecrypt(ciphertext, key, decryptedText);
+
+    // Print the decrypted text
+    printf("Decrypted Text: %s\n", decryptedText);
 
     return 0;
 }
 ```
 ## OUTPUT:
-![Screenshot 2024-09-30 100507](https://github.com/user-attachments/assets/74ea2572-4509-4c85-9d11-97032b95b7b9)
+### Encryption:
+![Screenshot 2024-11-11 111258](https://github.com/user-attachments/assets/0cf8fa76-3feb-4f39-af1c-38b7e5795cf5)
+### Decryption:
+![Screenshot 2024-11-11 111338](https://github.com/user-attachments/assets/b9a03229-9364-4b35-8855-2aa1d6703b21)
 
 ## RESULT: 
 Thus , to use Advanced Encryption Standard (AES) Algorithm for a practical application like URL Encryption is done successfully.
